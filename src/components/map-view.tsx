@@ -135,7 +135,7 @@ export function MapView({ adventures, center, zoom = 9, onPick, pickerMarker, cl
       });
       markersRef.current.push(m);
     }
-  }, [adventures, pickerMarker, navigate, onPick]);
+  }, [adventures, pickerMarker, navigate, onPick, ready]);
 
   return <div ref={ref} className={className ?? "h-[60vh] w-full"} />;
 }
