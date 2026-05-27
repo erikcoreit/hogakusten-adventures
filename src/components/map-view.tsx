@@ -60,6 +60,7 @@ export function MapView({ adventures, center, zoom = 9, onPick, pickerMarker, cl
   const markersRef = useRef<google.maps.Marker[]>([]);
   const infoRef = useRef<google.maps.InfoWindow | null>(null);
   const navigate = useNavigate();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
