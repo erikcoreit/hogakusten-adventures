@@ -10,7 +10,7 @@ import hero from "@/assets/hero-cliffs.jpg";
 import { ArrowRight, Map, Plus } from "lucide-react";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => { context.queryClient.ensureQueryData(publishedAdventuresQuery()); },
+  loader: ({ context }) => context.queryClient.ensureQueryData(publishedAdventuresQuery()),
   component: Home,
 });
 
