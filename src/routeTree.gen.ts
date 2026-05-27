@@ -9,38 +9,287 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UtforskaRouteImport } from './routes/utforska'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RegistreraRouteImport } from './routes/registrera'
+import { Route as OmRouteImport } from './routes/om'
+import { Route as LoggaInRouteImport } from './routes/logga-in'
+import { Route as AterstallLosenordRouteImport } from './routes/aterstall-losenord'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AventyrIdRouteImport } from './routes/aventyr.$id'
+import { Route as AuthenticatedSkapaRouteImport } from './routes/_authenticated/skapa'
+import { Route as AuthenticatedMinaAventyrRouteImport } from './routes/_authenticated/mina-aventyr'
+import { Route as AuthenticatedFavoriterRouteImport } from './routes/_authenticated/favoriter'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedRedigeraIdRouteImport } from './routes/_authenticated/redigera.$id'
+import { Route as AuthenticatedAdminRapporterRouteImport } from './routes/_authenticated/admin/rapporter'
+import { Route as AuthenticatedAdminGranskaRouteImport } from './routes/_authenticated/admin/granska'
 
+const UtforskaRoute = UtforskaRouteImport.update({
+  id: '/utforska',
+  path: '/utforska',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegistreraRoute = RegistreraRouteImport.update({
+  id: '/registrera',
+  path: '/registrera',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OmRoute = OmRouteImport.update({
+  id: '/om',
+  path: '/om',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoggaInRoute = LoggaInRouteImport.update({
+  id: '/logga-in',
+  path: '/logga-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AterstallLosenordRoute = AterstallLosenordRouteImport.update({
+  id: '/aterstall-losenord',
+  path: '/aterstall-losenord',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AventyrIdRoute = AventyrIdRouteImport.update({
+  id: '/aventyr/$id',
+  path: '/aventyr/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedSkapaRoute = AuthenticatedSkapaRouteImport.update({
+  id: '/skapa',
+  path: '/skapa',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedMinaAventyrRoute =
+  AuthenticatedMinaAventyrRouteImport.update({
+    id: '/mina-aventyr',
+    path: '/mina-aventyr',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedFavoriterRoute = AuthenticatedFavoriterRouteImport.update({
+  id: '/favoriter',
+  path: '/favoriter',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
+const AuthenticatedRedigeraIdRoute = AuthenticatedRedigeraIdRouteImport.update({
+  id: '/redigera/$id',
+  path: '/redigera/$id',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedAdminRapporterRoute =
+  AuthenticatedAdminRapporterRouteImport.update({
+    id: '/rapporter',
+    path: '/rapporter',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminGranskaRoute =
+  AuthenticatedAdminGranskaRouteImport.update({
+    id: '/granska',
+    path: '/granska',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aterstall-losenord': typeof AterstallLosenordRoute
+  '/logga-in': typeof LoggaInRoute
+  '/om': typeof OmRoute
+  '/registrera': typeof RegistreraRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/utforska': typeof UtforskaRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/favoriter': typeof AuthenticatedFavoriterRoute
+  '/mina-aventyr': typeof AuthenticatedMinaAventyrRoute
+  '/skapa': typeof AuthenticatedSkapaRoute
+  '/aventyr/$id': typeof AventyrIdRoute
+  '/admin/granska': typeof AuthenticatedAdminGranskaRoute
+  '/admin/rapporter': typeof AuthenticatedAdminRapporterRoute
+  '/redigera/$id': typeof AuthenticatedRedigeraIdRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aterstall-losenord': typeof AterstallLosenordRoute
+  '/logga-in': typeof LoggaInRoute
+  '/om': typeof OmRoute
+  '/registrera': typeof RegistreraRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/utforska': typeof UtforskaRoute
+  '/favoriter': typeof AuthenticatedFavoriterRoute
+  '/mina-aventyr': typeof AuthenticatedMinaAventyrRoute
+  '/skapa': typeof AuthenticatedSkapaRoute
+  '/aventyr/$id': typeof AventyrIdRoute
+  '/admin/granska': typeof AuthenticatedAdminGranskaRoute
+  '/admin/rapporter': typeof AuthenticatedAdminRapporterRoute
+  '/redigera/$id': typeof AuthenticatedRedigeraIdRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/aterstall-losenord': typeof AterstallLosenordRoute
+  '/logga-in': typeof LoggaInRoute
+  '/om': typeof OmRoute
+  '/registrera': typeof RegistreraRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/utforska': typeof UtforskaRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/_authenticated/favoriter': typeof AuthenticatedFavoriterRoute
+  '/_authenticated/mina-aventyr': typeof AuthenticatedMinaAventyrRoute
+  '/_authenticated/skapa': typeof AuthenticatedSkapaRoute
+  '/aventyr/$id': typeof AventyrIdRoute
+  '/_authenticated/admin/granska': typeof AuthenticatedAdminGranskaRoute
+  '/_authenticated/admin/rapporter': typeof AuthenticatedAdminRapporterRoute
+  '/_authenticated/redigera/$id': typeof AuthenticatedRedigeraIdRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/aterstall-losenord'
+    | '/logga-in'
+    | '/om'
+    | '/registrera'
+    | '/reset-password'
+    | '/utforska'
+    | '/admin'
+    | '/favoriter'
+    | '/mina-aventyr'
+    | '/skapa'
+    | '/aventyr/$id'
+    | '/admin/granska'
+    | '/admin/rapporter'
+    | '/redigera/$id'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/aterstall-losenord'
+    | '/logga-in'
+    | '/om'
+    | '/registrera'
+    | '/reset-password'
+    | '/utforska'
+    | '/favoriter'
+    | '/mina-aventyr'
+    | '/skapa'
+    | '/aventyr/$id'
+    | '/admin/granska'
+    | '/admin/rapporter'
+    | '/redigera/$id'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/aterstall-losenord'
+    | '/logga-in'
+    | '/om'
+    | '/registrera'
+    | '/reset-password'
+    | '/utforska'
+    | '/_authenticated/admin'
+    | '/_authenticated/favoriter'
+    | '/_authenticated/mina-aventyr'
+    | '/_authenticated/skapa'
+    | '/aventyr/$id'
+    | '/_authenticated/admin/granska'
+    | '/_authenticated/admin/rapporter'
+    | '/_authenticated/redigera/$id'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AterstallLosenordRoute: typeof AterstallLosenordRoute
+  LoggaInRoute: typeof LoggaInRoute
+  OmRoute: typeof OmRoute
+  RegistreraRoute: typeof RegistreraRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  UtforskaRoute: typeof UtforskaRoute
+  AventyrIdRoute: typeof AventyrIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/utforska': {
+      id: '/utforska'
+      path: '/utforska'
+      fullPath: '/utforska'
+      preLoaderRoute: typeof UtforskaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/registrera': {
+      id: '/registrera'
+      path: '/registrera'
+      fullPath: '/registrera'
+      preLoaderRoute: typeof RegistreraRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/om': {
+      id: '/om'
+      path: '/om'
+      fullPath: '/om'
+      preLoaderRoute: typeof OmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/logga-in': {
+      id: '/logga-in'
+      path: '/logga-in'
+      fullPath: '/logga-in'
+      preLoaderRoute: typeof LoggaInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aterstall-losenord': {
+      id: '/aterstall-losenord'
+      path: '/aterstall-losenord'
+      fullPath: '/aterstall-losenord'
+      preLoaderRoute: typeof AterstallLosenordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +297,117 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aventyr/$id': {
+      id: '/aventyr/$id'
+      path: '/aventyr/$id'
+      fullPath: '/aventyr/$id'
+      preLoaderRoute: typeof AventyrIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/skapa': {
+      id: '/_authenticated/skapa'
+      path: '/skapa'
+      fullPath: '/skapa'
+      preLoaderRoute: typeof AuthenticatedSkapaRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/mina-aventyr': {
+      id: '/_authenticated/mina-aventyr'
+      path: '/mina-aventyr'
+      fullPath: '/mina-aventyr'
+      preLoaderRoute: typeof AuthenticatedMinaAventyrRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/favoriter': {
+      id: '/_authenticated/favoriter'
+      path: '/favoriter'
+      fullPath: '/favoriter'
+      preLoaderRoute: typeof AuthenticatedFavoriterRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/redigera/$id': {
+      id: '/_authenticated/redigera/$id'
+      path: '/redigera/$id'
+      fullPath: '/redigera/$id'
+      preLoaderRoute: typeof AuthenticatedRedigeraIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/admin/rapporter': {
+      id: '/_authenticated/admin/rapporter'
+      path: '/rapporter'
+      fullPath: '/admin/rapporter'
+      preLoaderRoute: typeof AuthenticatedAdminRapporterRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/granska': {
+      id: '/_authenticated/admin/granska'
+      path: '/granska'
+      fullPath: '/admin/granska'
+      preLoaderRoute: typeof AuthenticatedAdminGranskaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminGranskaRoute: typeof AuthenticatedAdminGranskaRoute
+  AuthenticatedAdminRapporterRoute: typeof AuthenticatedAdminRapporterRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminGranskaRoute: AuthenticatedAdminGranskaRoute,
+  AuthenticatedAdminRapporterRoute: AuthenticatedAdminRapporterRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
+interface AuthenticatedRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
+  AuthenticatedFavoriterRoute: typeof AuthenticatedFavoriterRoute
+  AuthenticatedMinaAventyrRoute: typeof AuthenticatedMinaAventyrRoute
+  AuthenticatedSkapaRoute: typeof AuthenticatedSkapaRoute
+  AuthenticatedRedigeraIdRoute: typeof AuthenticatedRedigeraIdRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
+  AuthenticatedFavoriterRoute: AuthenticatedFavoriterRoute,
+  AuthenticatedMinaAventyrRoute: AuthenticatedMinaAventyrRoute,
+  AuthenticatedSkapaRoute: AuthenticatedSkapaRoute,
+  AuthenticatedRedigeraIdRoute: AuthenticatedRedigeraIdRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AterstallLosenordRoute: AterstallLosenordRoute,
+  LoggaInRoute: LoggaInRoute,
+  OmRoute: OmRoute,
+  RegistreraRoute: RegistreraRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  UtforskaRoute: UtforskaRoute,
+  AventyrIdRoute: AventyrIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
