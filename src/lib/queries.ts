@@ -127,3 +127,37 @@ export const openReportsQuery = () =>
       return data ?? [];
     },
   });
+
+export const ratingsQuery = (adventureId: string) =>
+  queryOptions({
+    queryKey: ["ratings", adventureId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("ratings")
+        .select("stars, user_id")
+        .eq("adventure_id", adventureId);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+export const commentsQuery = (adventureId: string) =>
+  queryOptions({
+    queryKey: ["comments", adventureId],
+    queryFn: async () => {
+      const { data: comments, error } = await supabase
+        .from("comments")
+        .select("id, body, user_id, created_at")
+        .eq("adventure_id", adventureId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      const list = comments ?? [];
+      const ids = Array.from(new Set(list.map((c) => c.user_id)));
+      let names = new Map<string, string>();
+      if (ids.length) {
+        const { data: profs } = await supabase.from("profiles").select("id, display_name").in("id", ids);
+        names = new Map((profs ?? []).map((p) => [p.id, p.display_name ?? "Anonym"]));
+      }
+      return list.map((c) => ({ ...c, display_name: names.get(c.user_id) ?? "Anonym" }));
+    },
+  });

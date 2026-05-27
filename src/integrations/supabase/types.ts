@@ -71,6 +71,41 @@ export type Database = {
         }
         Relationships: []
       }
+      comments: {
+        Row: {
+          adventure_id: string
+          body: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          adventure_id: string
+          body: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          adventure_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_adventure_id_fkey"
+            columns: ["adventure_id"]
+            isOneToOne: false
+            referencedRelation: "micro_adventures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       favorites: {
         Row: {
           adventure_id: string
@@ -177,6 +212,41 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      ratings: {
+        Row: {
+          adventure_id: string
+          created_at: string
+          id: string
+          stars: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          adventure_id: string
+          created_at?: string
+          id?: string
+          stars: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          adventure_id?: string
+          created_at?: string
+          id?: string
+          stars?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ratings_adventure_id_fkey"
+            columns: ["adventure_id"]
+            isOneToOne: false
+            referencedRelation: "micro_adventures"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reports: {
         Row: {
