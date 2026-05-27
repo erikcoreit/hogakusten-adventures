@@ -39,17 +39,12 @@ export const moderateAdventure = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     await assertModerator(context.userId);
-    const patch: Record<string, unknown> = {};
-    if (data.action === "approve") {
-      patch.status = "published";
-      patch.published_at = new Date().toISOString();
-      patch.rejection_note = null;
-    } else if (data.action === "reject") {
-      patch.status = "rejected";
-      patch.rejection_note = data.note ?? null;
-    } else {
-      patch.status = "archived";
-    }
+    const patch =
+      data.action === "approve"
+        ? { status: "published" as const, published_at: new Date().toISOString(), rejection_note: null }
+        : data.action === "reject"
+        ? { status: "rejected" as const, rejection_note: data.note ?? null }
+        : { status: "archived" as const };
     const { error } = await supabaseAdmin.from("micro_adventures").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
