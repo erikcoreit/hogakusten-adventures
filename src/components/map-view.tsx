@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { loadGoogleMaps } from "@/lib/google-maps";
 import type { Adventure } from "@/lib/queries";
 import { useNavigate } from "@tanstack/react-router";
@@ -60,6 +60,7 @@ export function MapView({ adventures, center, zoom = 9, onPick, pickerMarker, cl
   const markersRef = useRef<google.maps.Marker[]>([]);
   const infoRef = useRef<google.maps.InfoWindow | null>(null);
   const navigate = useNavigate();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -88,6 +89,7 @@ export function MapView({ adventures, center, zoom = 9, onPick, pickerMarker, cl
           if (e.latLng) onPick(e.latLng.lat(), e.latLng.lng());
         });
       }
+      setReady(true);
     }).catch((err) => console.error(err));
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -133,7 +135,7 @@ export function MapView({ adventures, center, zoom = 9, onPick, pickerMarker, cl
       });
       markersRef.current.push(m);
     }
-  }, [adventures, pickerMarker, navigate, onPick]);
+  }, [adventures, pickerMarker, navigate, onPick, ready]);
 
   return <div ref={ref} className={className ?? "h-[60vh] w-full"} />;
 }
