@@ -14,16 +14,253 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      adventure_tag_links: {
+        Row: {
+          adventure_id: string
+          tag_id: string
+        }
+        Insert: {
+          adventure_id: string
+          tag_id: string
+        }
+        Update: {
+          adventure_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "adventure_tag_links_adventure_id_fkey"
+            columns: ["adventure_id"]
+            isOneToOne: false
+            referencedRelation: "micro_adventures"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "adventure_tag_links_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "adventure_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      adventure_tags: {
+        Row: {
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["tag_kind"]
+          label_en: string
+          label_sv: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["tag_kind"]
+          label_en: string
+          label_sv: string
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["tag_kind"]
+          label_en?: string
+          label_sv?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      favorites: {
+        Row: {
+          adventure_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          adventure_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          adventure_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "favorites_adventure_id_fkey"
+            columns: ["adventure_id"]
+            isOneToOne: false
+            referencedRelation: "micro_adventures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      micro_adventures: {
+        Row: {
+          address: string | null
+          author_id: string
+          created_at: string
+          description: string
+          difficulty: Database["public"]["Enums"]["adventure_difficulty"]
+          duration_minutes: number | null
+          id: string
+          image_url: string | null
+          language: string
+          lat: number | null
+          lng: number | null
+          published_at: string | null
+          rejection_note: string | null
+          season: string[]
+          status: Database["public"]["Enums"]["adventure_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          author_id: string
+          created_at?: string
+          description?: string
+          difficulty?: Database["public"]["Enums"]["adventure_difficulty"]
+          duration_minutes?: number | null
+          id?: string
+          image_url?: string | null
+          language?: string
+          lat?: number | null
+          lng?: number | null
+          published_at?: string | null
+          rejection_note?: string | null
+          season?: string[]
+          status?: Database["public"]["Enums"]["adventure_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          author_id?: string
+          created_at?: string
+          description?: string
+          difficulty?: Database["public"]["Enums"]["adventure_difficulty"]
+          duration_minutes?: number | null
+          id?: string
+          image_url?: string | null
+          language?: string
+          lat?: number | null
+          lng?: number | null
+          published_at?: string | null
+          rejection_note?: string | null
+          season?: string[]
+          status?: Database["public"]["Enums"]["adventure_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      reports: {
+        Row: {
+          adventure_id: string
+          created_at: string
+          details: string | null
+          id: string
+          reason: string
+          reporter_id: string
+          status: Database["public"]["Enums"]["report_status"]
+        }
+        Insert: {
+          adventure_id: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: string
+          reporter_id: string
+          status?: Database["public"]["Enums"]["report_status"]
+        }
+        Update: {
+          adventure_id?: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: string
+          reporter_id?: string
+          status?: Database["public"]["Enums"]["report_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reports_adventure_id_fkey"
+            columns: ["adventure_id"]
+            isOneToOne: false
+            referencedRelation: "micro_adventures"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      adventure_difficulty: "latt" | "medel" | "utmanande"
+      adventure_status:
+        | "draft"
+        | "pending"
+        | "published"
+        | "rejected"
+        | "archived"
+      app_role: "contributor" | "moderator" | "admin"
+      report_status: "open" | "resolved" | "dismissed"
+      tag_kind: "category" | "tag"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +387,18 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      adventure_difficulty: ["latt", "medel", "utmanande"],
+      adventure_status: [
+        "draft",
+        "pending",
+        "published",
+        "rejected",
+        "archived",
+      ],
+      app_role: ["contributor", "moderator", "admin"],
+      report_status: ["open", "resolved", "dismissed"],
+      tag_kind: ["category", "tag"],
+    },
   },
 } as const

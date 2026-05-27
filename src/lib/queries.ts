@@ -1,0 +1,129 @@
+import { queryOptions } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+export type Adventure = {
+  id: string;
+  author_id: string;
+  title: string;
+  description: string;
+  lat: number | null;
+  lng: number | null;
+  address: string | null;
+  duration_minutes: number | null;
+  difficulty: "latt" | "medel" | "utmanande";
+  season: string[];
+  image_url: string | null;
+  status: "draft" | "pending" | "published" | "rejected" | "archived";
+  rejection_note: string | null;
+  language: string;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Tag = {
+  id: string;
+  slug: string;
+  label_sv: string;
+  label_en: string;
+  kind: "category" | "tag";
+};
+
+export const publishedAdventuresQuery = () =>
+  queryOptions({
+    queryKey: ["adventures", "published"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("micro_adventures")
+        .select("*, adventure_tag_links(tag_id)")
+        .eq("status", "published")
+        .order("published_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+export const adventureByIdQuery = (id: string) =>
+  queryOptions({
+    queryKey: ["adventure", id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("micro_adventures")
+        .select("*, adventure_tag_links(tag_id), profiles!micro_adventures_author_id_fkey(display_name)")
+        .eq("id", id)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+
+export const tagsQuery = () =>
+  queryOptions({
+    queryKey: ["tags"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("adventure_tags")
+        .select("*")
+        .order("kind", { ascending: true })
+        .order("label_sv", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as Tag[];
+    },
+  });
+
+export const myAdventuresQuery = (userId: string | undefined) =>
+  queryOptions({
+    queryKey: ["adventures", "mine", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("micro_adventures")
+        .select("*")
+        .eq("author_id", userId!)
+        .order("updated_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+export const myFavoritesQuery = (userId: string | undefined) =>
+  queryOptions({
+    queryKey: ["favorites", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("favorites")
+        .select("adventure_id, micro_adventures(*)")
+        .eq("user_id", userId!);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+export const pendingAdventuresQuery = () =>
+  queryOptions({
+    queryKey: ["adventures", "pending"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("micro_adventures")
+        .select("*, profiles!micro_adventures_author_id_fkey(display_name)")
+        .eq("status", "pending")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+export const openReportsQuery = () =>
+  queryOptions({
+    queryKey: ["reports", "open"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("reports")
+        .select("*, micro_adventures(id, title)")
+        .eq("status", "open")
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
