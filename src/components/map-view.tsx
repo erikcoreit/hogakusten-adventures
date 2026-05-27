@@ -89,6 +89,7 @@ export function MapView({ adventures, center, zoom = 9, onPick, pickerMarker, cl
           if (e.latLng) onPick(e.latLng.lat(), e.latLng.lng());
         });
       }
+      setReady(true);
     }).catch((err) => console.error(err));
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
