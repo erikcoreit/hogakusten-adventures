@@ -55,7 +55,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bf0e29f4-a795-4bae-a720-760cb9afa710/id-preview-675297e5--2c810529-fa64-426d-9b21-a5063ecfcfe5.lovable.app-1779866101550.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/bf0e29f4-a795-4bae-a720-760cb9afa710/id-preview-675297e5--2c810529-fa64-426d-9b21-a5063ecfcfe5.lovable.app-1779866101550.png" },
     ],
-    links: [{ rel: "stylesheet", href: appCss }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" }],
+    links: [{ rel: "stylesheet", href: appCss }, { rel: "icon", type: "image/png", href: "/favicon.png" }, { rel: "apple-touch-icon", href: "/favicon.png" }, { rel: "preconnect", href: "https://fonts.googleapis.com" }, { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" }],
   }),
   shellComponent: RootShell,
   component: RootComponent,
