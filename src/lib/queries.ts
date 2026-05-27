@@ -155,8 +155,8 @@ export const commentsQuery = (adventureId: string) =>
       const ids = Array.from(new Set(list.map((c) => c.user_id)));
       let names = new Map<string, string>();
       if (ids.length) {
-        const { data: profs } = await supabase.from("profiles").select("user_id, display_name").in("user_id", ids);
-        names = new Map((profs ?? []).map((p) => [p.user_id, p.display_name ?? "Anonym"]));
+        const { data: profs } = await supabase.from("profiles").select("id, display_name").in("id", ids);
+        names = new Map((profs ?? []).map((p) => [p.id, p.display_name ?? "Anonym"]));
       }
       return list.map((c) => ({ ...c, display_name: names.get(c.user_id) ?? "Anonym" }));
     },
