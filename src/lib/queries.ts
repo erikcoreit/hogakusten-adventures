@@ -127,3 +127,30 @@ export const openReportsQuery = () =>
       return data ?? [];
     },
   });
+
+export const ratingsQuery = (adventureId: string) =>
+  queryOptions({
+    queryKey: ["ratings", adventureId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("ratings")
+        .select("stars, user_id")
+        .eq("adventure_id", adventureId);
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
+
+export const commentsQuery = (adventureId: string) =>
+  queryOptions({
+    queryKey: ["comments", adventureId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("comments")
+        .select("id, body, user_id, created_at, profiles!comments_user_id_fkey(display_name)")
+        .eq("adventure_id", adventureId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data ?? [];
+    },
+  });
