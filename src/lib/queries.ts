@@ -106,11 +106,19 @@ export const pendingAdventuresQuery = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("micro_adventures")
-        .select("*, profiles!micro_adventures_author_id_fkey(display_name)")
+        .select("*")
         .eq("status", "pending")
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return data ?? [];
+      const list = data ?? [];
+      const authorIds = Array.from(new Set(list.map((a) => a.author_id)));
+      if (authorIds.length === 0) return list;
+      const { data: profiles } = await supabase
+        .from("profiles")
+        .select("id, display_name")
+        .in("id", authorIds);
+      const map = new Map((profiles ?? []).map((p) => [p.id, p]));
+      return list.map((a) => ({ ...a, profiles: map.get(a.author_id) ?? null }));
     },
   });
 
