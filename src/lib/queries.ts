@@ -49,11 +49,17 @@ export const adventureByIdQuery = (id: string) =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("micro_adventures")
-        .select("*, adventure_tag_links(tag_id), profiles!micro_adventures_author_id_fkey(display_name)")
+        .select("*, adventure_tag_links(tag_id)")
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
-      return data;
+      if (!data) return null;
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("id, display_name")
+        .eq("id", data.author_id)
+        .maybeSingle();
+      return { ...data, profiles: profile ?? null };
     },
   });
 
