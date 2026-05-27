@@ -10,12 +10,14 @@ interface Props {
   onPick?: (lat: number, lng: number) => void;
   pickerMarker?: { lat: number; lng: number } | null;
   className?: string;
+  mapTypeToggle?: boolean;
+  defaultMapType?: "roadmap" | "hybrid";
 }
 
 // Höga Kusten center
 const DEFAULT_CENTER = { lat: 63.1, lng: 18.4 };
 
-export function MapView({ adventures, center, zoom = 9, onPick, pickerMarker, className }: Props) {
+export function MapView({ adventures, center, zoom = 9, onPick, pickerMarker, className, mapTypeToggle = true, defaultMapType = "roadmap" }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
@@ -28,12 +30,18 @@ export function MapView({ adventures, center, zoom = 9, onPick, pickerMarker, cl
       const map = new g.maps.Map(ref.current, {
         center: center ?? DEFAULT_CENTER,
         zoom,
-        mapTypeControl: false,
+        mapTypeId: defaultMapType,
+        mapTypeControl: mapTypeToggle,
+        mapTypeControlOptions: mapTypeToggle ? {
+          style: g.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+          position: g.maps.ControlPosition.TOP_LEFT,
+          mapTypeIds: ["roadmap", "hybrid"],
+        } : undefined,
         streetViewControl: false,
         fullscreenControl: false,
-        styles: [
+        styles: defaultMapType === "roadmap" ? [
           { featureType: "poi", stylers: [{ visibility: "off" }] },
-        ],
+        ] : undefined,
       });
       mapRef.current = map;
       if (onPick) {
