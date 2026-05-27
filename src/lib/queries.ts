@@ -145,12 +145,19 @@ export const commentsQuery = (adventureId: string) =>
   queryOptions({
     queryKey: ["comments", adventureId],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: comments, error } = await supabase
         .from("comments")
-        .select("id, body, user_id, created_at, profiles!comments_user_id_fkey(display_name)")
+        .select("id, body, user_id, created_at")
         .eq("adventure_id", adventureId)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data ?? [];
+      const list = comments ?? [];
+      const ids = Array.from(new Set(list.map((c) => c.user_id)));
+      let names = new Map<string, string>();
+      if (ids.length) {
+        const { data: profs } = await supabase.from("profiles").select("user_id, display_name").in("user_id", ids);
+        names = new Map((profs ?? []).map((p) => [p.user_id, p.display_name ?? "Anonym"]));
+      }
+      return list.map((c) => ({ ...c, display_name: names.get(c.user_id) ?? "Anonym" }));
     },
   });
