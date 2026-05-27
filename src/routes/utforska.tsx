@@ -61,16 +61,16 @@ function Discover() {
             </Button>
           </div>
         </div>
-        <div className="mb-6">
-          <FilterBar tags={tags} selected={selected} onToggle={toggle} />
+        <div className="mb-6 border border-border bg-card p-4">
+          <FilterBar tags={tags} selected={selected} onToggle={toggle} onClear={() => setSelected(new Set())} />
         </div>
         {view === "map" ? (
           <MapView adventures={filtered} className="h-[70vh] w-full border border-border" />
         ) : filtered.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t("discover.empty")}</p>
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((a) => <AdventureCard key={a.id} a={a} />)}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {filtered.map((a) => <AdventureCard key={a.id} a={a} tags={tags} />)}
           </div>
         )}
       </div>

@@ -1,26 +1,53 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { publishedAdventuresQuery } from "@/lib/queries";
+import { publishedAdventuresQuery, tagsQuery } from "@/lib/queries";
 import { useI18n } from "@/lib/i18n";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { AdventureCard } from "@/components/adventure-card";
+import { FilterBar } from "@/components/filter-bar";
 import { MapView } from "@/components/map-view";
 import { Button } from "@/components/ui/button";
 import hero from "@/assets/hero-cliffs.jpg";
-import { ArrowRight, Map as MapIcon, List, Plus } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, Map as MapIcon, List, Plus, Filter as FilterIcon } from "lucide-react";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(publishedAdventuresQuery()),
+  loader: ({ context }) => {
+    context.queryClient.ensureQueryData(publishedAdventuresQuery());
+    context.queryClient.ensureQueryData(tagsQuery());
+  },
   component: Home,
 });
 
 function Home() {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const { data: adventures } = useSuspenseQuery(publishedAdventuresQuery());
-  const featured = adventures.slice(0, 6);
+  const { data: tags } = useSuspenseQuery(tagsQuery());
   const [view, setView] = useState<"map" | "list">("map");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [showFilter, setShowFilter] = useState(false);
+
+  const tagMap = useMemo(() => new Map(tags.map((tg) => [tg.id, tg.slug])), [tags]);
+  const filtered = useMemo(() => {
+    if (selected.size === 0) return adventures;
+    return adventures.filter((a) => {
+      const links = (a as unknown as { adventure_tag_links?: { tag_id: string }[] }).adventure_tag_links ?? [];
+      const slugs = new Set(links.map((l) => tagMap.get(l.tag_id)).filter(Boolean) as string[]);
+      for (const s of selected) if (!slugs.has(s)) return false;
+      return true;
+    });
+  }, [adventures, selected, tagMap]);
+
+  const toggle = (slug: string) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(slug)) next.delete(slug);
+      else next.add(slug);
+      return next;
+    });
+
+  const featured = adventures.slice(0, 6);
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
@@ -50,31 +77,52 @@ function Home() {
               {t("nav.explore")} <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {featured.map((a) => <AdventureCard key={a.id} a={a} />)}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {featured.map((a) => <AdventureCard key={a.id} a={a} tags={tags} />)}
           </div>
         </section>
       )}
 
       <section className="mx-auto w-full max-w-6xl flex-1 px-4 pb-12">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex items-center justify-between gap-2">
           <h2 className="text-2xl font-bold">{t("discover.title")}</h2>
-          <div className="flex border border-border">
-            <Button variant={view === "map" ? "secondary" : "ghost"} size="sm" className="rounded-none" onClick={() => setView("map")}>
-              <MapIcon className="mr-1 h-4 w-4" />{t("home.viewMap")}
+          <div className="flex items-center gap-2">
+            <Button
+              variant={showFilter || selected.size > 0 ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setShowFilter((s) => !s)}
+              className="rounded-none"
+            >
+              <FilterIcon className="mr-1 h-4 w-4" />
+              {lang === "sv" ? "Filter" : "Filter"}
+              {selected.size > 0 && (
+                <span className="ml-1.5 inline-flex h-4 min-w-4 items-center justify-center bg-primary px-1 text-[10px] font-mono text-primary-foreground">
+                  {selected.size}
+                </span>
+              )}
             </Button>
-            <Button variant={view === "list" ? "secondary" : "ghost"} size="sm" className="rounded-none" onClick={() => setView("list")}>
-              <List className="mr-1 h-4 w-4" />{t("home.viewList")}
-            </Button>
+            <div className="flex border border-border">
+              <Button variant={view === "map" ? "secondary" : "ghost"} size="sm" className="rounded-none" onClick={() => setView("map")}>
+                <MapIcon className="mr-1 h-4 w-4" />{t("home.viewMap")}
+              </Button>
+              <Button variant={view === "list" ? "secondary" : "ghost"} size="sm" className="rounded-none" onClick={() => setView("list")}>
+                <List className="mr-1 h-4 w-4" />{t("home.viewList")}
+              </Button>
+            </div>
           </div>
         </div>
+        {showFilter && (
+          <div className="mb-4 border border-border bg-card p-4">
+            <FilterBar tags={tags} selected={selected} onToggle={toggle} onClear={() => setSelected(new Set())} />
+          </div>
+        )}
         {view === "map" ? (
-          <MapView adventures={adventures} className="h-[60vh] w-full border border-border" mapTypeToggle />
-        ) : adventures.length === 0 ? (
+          <MapView adventures={filtered} className="h-[60vh] w-full border border-border" mapTypeToggle />
+        ) : filtered.length === 0 ? (
           <p className="text-sm text-muted-foreground">{t("discover.empty")}</p>
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {adventures.map((a) => <AdventureCard key={a.id} a={a} />)}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {filtered.map((a) => <AdventureCard key={a.id} a={a} tags={tags} />)}
           </div>
         )}
       </section>
