@@ -12,6 +12,13 @@ import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/logga-in")({
+  head: () => ({
+    meta: [
+      { title: "Logga in – Höga Kusten Micro Adventures" },
+      { name: "description", content: "Logga in för att spara favoriter, bidra med egna mikroäventyr och rapportera fel." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: SignIn,
 });
 
