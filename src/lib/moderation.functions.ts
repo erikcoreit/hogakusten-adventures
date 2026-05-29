@@ -64,3 +64,29 @@ export const resolveReport = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+async function assertAdmin(userId: string) {
+  const { data, error } = await supabaseAdmin
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId);
+  if (error) throw new Error(error.message);
+  const roles = (data ?? []).map((r) => r.role);
+  if (!roles.includes("admin")) throw new Error("Forbidden");
+}
+
+export const deleteAdventure = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.userId);
+    // Clean dependents first (no FK cascade configured)
+    await supabaseAdmin.from("adventure_tag_links").delete().eq("adventure_id", data.id);
+    await supabaseAdmin.from("comments").delete().eq("adventure_id", data.id);
+    await supabaseAdmin.from("ratings").delete().eq("adventure_id", data.id);
+    await supabaseAdmin.from("favorites").delete().eq("adventure_id", data.id);
+    await supabaseAdmin.from("reports").delete().eq("adventure_id", data.id);
+    const { error } = await supabaseAdmin.from("micro_adventures").delete().eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

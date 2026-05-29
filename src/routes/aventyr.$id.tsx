@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { adventureByIdQuery } from "@/lib/queries";
 import { useI18n } from "@/lib/i18n";
@@ -9,10 +9,13 @@ import { AdventureFeedback } from "@/components/adventure-feedback";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
-import { Heart, ExternalLink, Flag, ArrowLeft, Clock } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { deleteAdventure } from "@/lib/moderation.functions";
+import { Heart, ExternalLink, Flag, ArrowLeft, Clock, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 
@@ -61,8 +64,10 @@ function Detail() {
   const { id } = Route.useParams();
   const { t } = useI18n();
   const { data: a } = useSuspenseQuery(adventureByIdQuery(id));
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const deleteFn = useServerFn(deleteAdventure);
   const [fav, setFav] = useState(false);
   const [reason, setReason] = useState("");
   const [details, setDetails] = useState("");
@@ -135,6 +140,34 @@ function Detail() {
               </div>
             </DialogContent>
           </Dialog>
+          {isAdmin && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive"><Trash2 className="mr-2 h-4 w-4" />Ta bort</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Ta bort äventyret?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Detta tar permanent bort "{a.title}" och alla kommentarer, betyg och favoriter kopplade till det. Går inte att ångra.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={async () => {
+                      try {
+                        await deleteFn({ data: { id: a.id } });
+                        toast.success("Äventyret borttaget");
+                        qc.invalidateQueries({ queryKey: ["adventures"] });
+                        navigate({ to: "/utforska" });
+                      } catch (e) { toast.error((e as Error).message); }
+                    }}
+                  >Ta bort</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
 
         {a.lat && a.lng && (
