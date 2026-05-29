@@ -64,8 +64,10 @@ function Detail() {
   const { id } = Route.useParams();
   const { t } = useI18n();
   const { data: a } = useSuspenseQuery(adventureByIdQuery(id));
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const qc = useQueryClient();
+  const navigate = useNavigate();
+  const deleteFn = useServerFn(deleteAdventure);
   const [fav, setFav] = useState(false);
   const [reason, setReason] = useState("");
   const [details, setDetails] = useState("");
