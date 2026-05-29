@@ -3,7 +3,21 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
 export const Route = createFileRoute("/om")({
-  head: () => ({ meta: [{ title: "Om – Höga Kusten Micro Adventures" }] }),
+  head: () => {
+    const title = "Om appen – Höga Kusten Micro Adventures";
+    const description = "Höga Kusten Micro Adventures är en community-driven karta över korta friluftsupplevelser i Örnsköldsvik och Höga Kusten.";
+    const url = "https://hogakusten-adventures.lovable.app/om";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   component: About,
 });
 
