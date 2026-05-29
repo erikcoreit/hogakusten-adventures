@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UtforskaRouteImport } from './routes/utforska'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegistreraRouteImport } from './routes/registrera'
 import { Route as OmRouteImport } from './routes/om'
@@ -30,6 +31,11 @@ import { Route as AuthenticatedAdminGranskaRouteImport } from './routes/_authent
 const UtforskaRoute = UtforskaRouteImport.update({
   id: '/utforska',
   path: '/utforska',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/om': typeof OmRoute
   '/registrera': typeof RegistreraRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/utforska': typeof UtforskaRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/favoriter': typeof AuthenticatedFavoriterRoute
@@ -140,6 +147,7 @@ export interface FileRoutesByTo {
   '/om': typeof OmRoute
   '/registrera': typeof RegistreraRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/utforska': typeof UtforskaRoute
   '/favoriter': typeof AuthenticatedFavoriterRoute
   '/mina-aventyr': typeof AuthenticatedMinaAventyrRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/om': typeof OmRoute
   '/registrera': typeof RegistreraRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/utforska': typeof UtforskaRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/favoriter': typeof AuthenticatedFavoriterRoute
@@ -179,6 +188,7 @@ export interface FileRouteTypes {
     | '/om'
     | '/registrera'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/utforska'
     | '/admin'
     | '/favoriter'
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/om'
     | '/registrera'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/utforska'
     | '/favoriter'
     | '/mina-aventyr'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/om'
     | '/registrera'
     | '/reset-password'
+    | '/sitemap.xml'
     | '/utforska'
     | '/_authenticated/admin'
     | '/_authenticated/favoriter'
@@ -235,6 +247,7 @@ export interface RootRouteChildren {
   OmRoute: typeof OmRoute
   RegistreraRoute: typeof RegistreraRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UtforskaRoute: typeof UtforskaRoute
   AventyrIdRoute: typeof AventyrIdRoute
 }
@@ -246,6 +259,13 @@ declare module '@tanstack/react-router' {
       path: '/utforska'
       fullPath: '/utforska'
       preLoaderRoute: typeof UtforskaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -406,6 +426,7 @@ const rootRouteChildren: RootRouteChildren = {
   OmRoute: OmRoute,
   RegistreraRoute: RegistreraRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   UtforskaRoute: UtforskaRoute,
   AventyrIdRoute: AventyrIdRoute,
 }
