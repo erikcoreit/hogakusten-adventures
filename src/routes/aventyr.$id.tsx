@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { adventureByIdQuery } from "@/lib/queries";
 import { useI18n } from "@/lib/i18n";
@@ -9,10 +9,13 @@ import { AdventureFeedback } from "@/components/adventure-feedback";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { supabase } from "@/integrations/supabase/client";
-import { Heart, ExternalLink, Flag, ArrowLeft, Clock } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { deleteAdventure } from "@/lib/moderation.functions";
+import { Heart, ExternalLink, Flag, ArrowLeft, Clock, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 
