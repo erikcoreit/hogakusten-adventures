@@ -8,7 +8,16 @@ import { Input } from "@/components/ui/input";
 import { useI18n } from "@/lib/i18n";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/aterstall-losenord")({ component: Forgot });
+export const Route = createFileRoute("/aterstall-losenord")({
+  head: () => ({
+    meta: [
+      { title: "Återställ lösenord – Höga Kusten Micro Adventures" },
+      { name: "description", content: "Återställ ditt lösenord via e-post." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+  component: Forgot,
+});
 
 function Forgot() {
   const { t } = useI18n();
