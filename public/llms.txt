@@ -1,0 +1,11 @@
+# Höga Kusten Micro Adventures
+
+> Community-driven karta över korta friluftsupplevelser (mikroäventyr) i Örnsköldsvik och Höga Kusten — vandringar, vyer, eldplatser, grottor, kajakturer och bad.
+
+Användare kan utforska utan konto. Med ett gratis konto kan man bidra med egna äventyr, spara favoriter och rapportera fel. Alla nya bidrag granskas av moderatorer innan publicering.
+
+## Pages
+
+- [Startsida](/): Karta och lista över publicerade mikroäventyr.
+- [Utforska](/utforska): Filtrerbar vy med alla publicerade äventyr.
+- [Om](/om): Information om projektet och hur det fungerar.
