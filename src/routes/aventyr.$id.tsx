@@ -140,6 +140,34 @@ function Detail() {
               </div>
             </DialogContent>
           </Dialog>
+          {isAdmin && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive"><Trash2 className="mr-2 h-4 w-4" />Ta bort</Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Ta bort äventyret?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Detta tar permanent bort "{a.title}" och alla kommentarer, betyg och favoriter kopplade till det. Går inte att ångra.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Avbryt</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={async () => {
+                      try {
+                        await deleteFn({ data: { id: a.id } });
+                        toast.success("Äventyret borttaget");
+                        qc.invalidateQueries({ queryKey: ["adventures"] });
+                        navigate({ to: "/utforska" });
+                      } catch (e) { toast.error((e as Error).message); }
+                    }}
+                  >Ta bort</AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </div>
 
         {a.lat && a.lng && (
