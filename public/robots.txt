@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /logga-in
+Disallow: /registrera
+Disallow: /aterstall-losenord
+Disallow: /reset-password
+Disallow: /mina-aventyr
+Disallow: /skapa
+
+Sitemap: https://hogakusten-adventures.lovable.app/sitemap.xml

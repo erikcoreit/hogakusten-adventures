@@ -8,7 +8,16 @@ import { Input } from "@/components/ui/input";
 import { useI18n } from "@/lib/i18n";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/reset-password")({ component: Reset });
+export const Route = createFileRoute("/reset-password")({
+  head: () => ({
+    meta: [
+      { title: "Välj nytt lösenord – Höga Kusten Micro Adventures" },
+      { name: "description", content: "Välj ett nytt lösenord för ditt konto." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+  component: Reset,
+});
 
 function Reset() {
   const { t } = useI18n();

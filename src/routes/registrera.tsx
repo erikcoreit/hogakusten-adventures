@@ -11,7 +11,16 @@ import { useI18n } from "@/lib/i18n";
 import { useAuth } from "@/lib/auth-context";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/registrera")({ component: SignUp });
+export const Route = createFileRoute("/registrera")({
+  head: () => ({
+    meta: [
+      { title: "Skapa konto – Höga Kusten Micro Adventures" },
+      { name: "description", content: "Skapa ett gratis konto för att bidra med egna mikroäventyr och spara favoriter." },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
+  component: SignUp,
+});
 
 function SignUp() {
   const { t } = useI18n();

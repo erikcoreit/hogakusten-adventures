@@ -13,6 +13,24 @@ import { ArrowRight, Map as MapIcon, List, Plus, Filter as FilterIcon } from "lu
 import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/")({
+  head: () => {
+    const title = "Höga Kusten Micro Adventures – upptäck korta friluftsäventyr";
+    const description = "Community-driven karta över korta mikroäventyr i Örnsköldsvik och Höga Kusten: vandringar, vyer, bad, eldplatser och grottor.";
+    const url = "https://hogakusten-adventures.lovable.app/";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "website" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(publishedAdventuresQuery());
     context.queryClient.ensureQueryData(tagsQuery());

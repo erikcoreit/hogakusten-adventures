@@ -18,6 +18,42 @@ import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/aventyr/$id")({
   loader: ({ context, params }) => context.queryClient.ensureQueryData(adventureByIdQuery(params.id)),
+  head: ({ params, loaderData }) => {
+    const a = loaderData as { title?: string; description?: string; image_url?: string | null } | null;
+    const url = `https://hogakusten-adventures.lovable.app/aventyr/${params.id}`;
+    const title = a?.title ? `${a.title} – Höga Kusten Micro Adventures` : "Mikroäventyr – Höga Kusten";
+    const rawDesc = a?.description?.replace(/\s+/g, " ").trim() ?? "Ett mikroäventyr i Höga Kusten.";
+    const description = rawDesc.length > 160 ? rawDesc.slice(0, 157) + "…" : rawDesc;
+    const meta: Array<Record<string, string>> = [
+      { title },
+      { name: "description", content: description },
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:url", content: url },
+      { property: "og:type", content: "article" },
+    ];
+    if (a?.image_url) {
+      meta.push({ property: "og:image", content: a.image_url });
+      meta.push({ name: "twitter:image", content: a.image_url });
+    }
+    return {
+      meta,
+      links: [{ rel: "canonical", href: url }],
+      scripts: a
+        ? [{
+            type: "application/ld+json",
+            children: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: a.title,
+              description,
+              image: a.image_url ?? undefined,
+              url,
+            }),
+          }]
+        : [],
+    };
+  },
   component: Detail,
 });
 
