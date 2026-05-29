@@ -12,7 +12,21 @@ import { Button } from "@/components/ui/button";
 import { Map as MapIcon, List } from "lucide-react";
 
 export const Route = createFileRoute("/utforska")({
-  head: () => ({ meta: [{ title: "Utforska – Höga Kusten Micro Adventures" }] }),
+  head: () => {
+    const title = "Utforska mikroäventyr – Höga Kusten";
+    const description = "Bläddra bland publicerade mikroäventyr i Höga Kusten och Örnsköldsvik – filtrera på kategori, svårighet och tid.";
+    const url = "https://hogakusten-adventures.lovable.app/utforska";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:url", content: url },
+      ],
+      links: [{ rel: "canonical", href: url }],
+    };
+  },
   loader: ({ context }) => {
     context.queryClient.ensureQueryData(publishedAdventuresQuery());
     context.queryClient.ensureQueryData(tagsQuery());
